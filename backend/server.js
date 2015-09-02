@@ -34,10 +34,10 @@ router.route('/points')
     
 router.route('/point/:point_id')
     .get(function(req, res) {
-        Point.findById(req.params.point_id, function(err, bear) {
+        Point.findById(req.params.point_id, function(err, point) {
             if (err)
                 res.send(err);
-            res.json(bear);
+            res.json(point);
         });
     });
 
