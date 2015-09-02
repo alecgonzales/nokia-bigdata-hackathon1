@@ -43,7 +43,7 @@ html, body, #maps, .container-fluid {
 .sidebar > div {
   margin: 10px 0;
   height: 280px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .sidebar .header {
