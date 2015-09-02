@@ -1,5 +1,8 @@
+html, body, #maps, .container-fluid {
+  height: 100% !important;
+}
+
 #maps {
-  height: 600px;
   background: #aaf;
 }
 
@@ -17,32 +20,36 @@
   border-bottom: 1px solid #000;
   background: #fff;
   transition-duration: 0.5s;
+  text-align: center;
 }
 
 .sidebar::after {
   position: absolute;
   bottom: -20px;
+  right: 0;
   width: 85px;
   height: 20px;
-  border: 1px solid #dfdfdf;
-  background: #a9a9a9;
+  border-left: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-bottom-left-radius: 10px;
+  background: #fff;
   content: "hover me";
 }
 
 .sidebar:hover {
-  top: 0px;
+  top: 0;
 }
 
 .sidebar > div {
-  height: 95%;
-  overflow-y: scroll;
+  margin: 10px 0;
+  height: 280px;
+  overflow-y: auto;
 }
 
 .sidebar .header {
   position: absolute;
   top: 0;
   background: white;
-  width: 100%;
 }
 
 .sidebar table {
