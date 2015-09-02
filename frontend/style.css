@@ -1,11 +1,12 @@
-#app {
-  position: relative;
-}
-
 #maps {
   height: 600px;
   background: #aaf;
 }
+
+#googleMap {
+  height: 100%;
+}
+
 .sidebar {
   position: absolute;
   top: -300px;
@@ -37,7 +38,7 @@
   overflow-y: scroll;
 }
 
-.header {
+.sidebar .header {
   position: absolute;
   top: 0;
   background: white;
