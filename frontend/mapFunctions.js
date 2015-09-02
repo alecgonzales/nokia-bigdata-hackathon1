@@ -12,6 +12,7 @@ function initMap() {
   var mapProp = {
     center:new google.maps.LatLng(13,122),
     zoom:6,
+    disableDefaultUI: true,
     mapTypeId:google.maps.MapTypeId.ROADMAP
   };
   return map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
