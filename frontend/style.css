@@ -1,0 +1,50 @@
+#maps {
+  height: 600px;
+  background: #aaf;
+}
+
+#googleMap {
+  height: 100%;
+}
+
+.sidebar {
+  position: absolute;
+  top: -300px;
+  right: 0;
+  height: 300px;
+  width: 400px;
+  border-left: 1px solid #000;
+  border-bottom: 1px solid #000;
+  background: #fff;
+  transition-duration: 0.5s;
+}
+
+.sidebar::after {
+  position: absolute;
+  bottom: -20px;
+  width: 85px;
+  height: 20px;
+  border: 1px solid #dfdfdf;
+  background: #a9a9a9;
+  content: "hover me";
+}
+
+.sidebar:hover {
+  top: 0px;
+}
+
+.sidebar > div {
+  height: 95%;
+  overflow-y: scroll;
+}
+
+.sidebar .header {
+  position: absolute;
+  top: 0;
+  background: white;
+  width: 100%;
+}
+
+.sidebar table {
+  margin-top: 37px;
+}
