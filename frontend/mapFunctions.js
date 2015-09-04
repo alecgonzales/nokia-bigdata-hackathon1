@@ -120,6 +120,6 @@ function addTableClickEvent() {
     var latitude = $(this).data("latitude");
     var longitude = $(this).data("longitude");
     map.setCenter(new google.maps.LatLng(latitude,longitude));
-    map.setZoom(15);
+    map.setZoom(30);
   });
 };
