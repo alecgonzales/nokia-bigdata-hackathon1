@@ -1,13 +1,26 @@
-
-google.maps.event.addDomListener(window, 'load', initialize);
+$(document).ready(function() {
+  initialize();
+});
 
 function initialize() {
   var map = initMap();
 
-  var siteData = getSiteData();
-  for (i = 0; i < siteData.length; i++) {
-    addMarker(map,siteData[i]);
-  }
+  markAllPointsOnMap(map);
+}
+
+function markAllPointsOnMap(map) {
+  $.get("/api/points", function(points) {
+    _.forEach(points, function(point) {
+      var marker = { name:"Site",
+        longitude:point.position.longitude,
+        latitude:point.position.latitude,
+        type:point.technology,
+        operator:point.operator
+      };
+      console.log(marker);
+      addMarker(map,marker);
+    });
+  });
 }
 
 function initMap() {
@@ -37,15 +50,14 @@ function addMarker(map,site) {
       position:coordinates,
       title:site.name,
       icon:"siteIcon.png",
+      map: map
     }
   );
-  marker.setMap(map);
   marker.addListener('click', function() { showSiteData(marker,site) } );
 }
 
-// TODO: Make sure to use correct property names
 function getSitePosition(site) {
-  return new google.maps.LatLng(site.longitude,site.latitude);
+  return new google.maps.LatLng(site.latitude,site.longitude);
 }
 
 function showSiteData(marker,site) {
