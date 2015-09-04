@@ -6,13 +6,13 @@ function initialize() {
   var map = initMap();
 
   markAllPointsOnMap(map);
-  updateTable(getSiteData());
+  queryTableData();
 }
 
 function markAllPointsOnMap(map) {
   $.get("/api/points", function(points) {
     _.forEach(points, function(point) {
-      var marker = { name:"Site",
+      var marker = { name:point.site_id,
         longitude:point.position.longitude,
         latitude:point.position.latitude,
         type:point.technology,
@@ -76,17 +76,27 @@ function showSiteData(marker,site) {
   infoWindow.open(map,marker);
 }
 
-function updateTable(siteData) {
+function queryTableData(page,key,value) {
+  page = page || 1;
+  key = key || 'null';
+  value = value || 'null';
+
+  console.log("/api/points/" + page + '/'+ key + '/' + value);
+  $.get("/api/points/" + page + '/'+ key + '/' + value, function(points) {
+    console.log(points);
+    updateTable(points);
+  });
+}
+
+function updateTable(sites) {
   $("#maps table tbody").empty();
-  var tableData = "";
-  for (i = 0; i < siteData.length; i++) {
-    var site = siteData[i];
-    tableData = "<tr data-longitude=\"" + site.longitude + "\" data-latitude=\"" + site.latitude + "\">"
-      + "<td>" + site.name + "</td>"
+  _.forEach(sites, function(site) {
+    var tableData = "<tr data-longitude=\"" + site.longitude + "\" data-latitude=\"" + site.latitude + "\">"
+      + "<td>" + site.site_name + "</td>"
       + "<td>" + site.technology + "</td>"
-      + "<td>" + site.type + "</td>"
+      + "<td>" + site.site_type + "</td>"
       + "<td>" + site.operator + "</td>"
       + "</tr>";
-      $("#maps table").append(tableData);
-  }
+    $("#maps table").append(tableData);
+  });
 }
