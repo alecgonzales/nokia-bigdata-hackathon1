@@ -18,6 +18,33 @@ var port = process.env.PORT || 8080;        // set our port
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
+var getAllPoints = function(req, res) {
+    Point.find(function(err, points) {
+        if (err)
+            res.send(err);
+        res.json(points);
+    });
+}
+var getPointsForPage = function(req, res, pageNumber, query) {
+  var entryLimit = 50;
+  var skipEntries = entryLimit*(pageNumber-1);
+  var displayObject = {};x
+  displayObject['_id']=1;
+  displayObject['site_name'] = 1;
+  displayObject['technology'] = 1;
+
+  if(pageNumber!=0){
+    query.skip(skipEntries).limit(entryLimit)
+  }
+
+  query.select(displayObject)
+  .exec('find', function(err, points) {
+    if (err)
+        res.send(err);
+    res.json(points);
+  });
+};
+
 router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
 });
@@ -32,53 +59,37 @@ router.route('/point/:point_id')
     });
 
 router.route('/points')
-    .get(function(req, res) {
-        Point.find(function(err, points) {
-            if (err)
-                res.send(err);
-
-            res.json(points);
-        });
+    .get(function(req, res){
+      getAllPoints(req, res);
     });
 
 router.route('/points/:page')
   .get(function(req, res) {
-    var entryLimit = 50;
     var pageNumber = req.params.page;
-    var skipEntries = entryLimit*(pageNumber-1);
-
+  if (pageNumber == 0) {
+    getAllPoints(req, res);
+  }  else {
     var query = Point.find({});
-    query.skip(skipEntries).limit(entryLimit).select({'site_name':1}).exec('find', function(err, points) {
-      if (err)
-          res.send(err);
-
-      res.json(points);
-    });
-
+    getPointsForPage(req, res, pageNumber, query);
+  }
  });
 
-  router.route('/points/:page/:property/:value')
-
+router.route('/points/:page/:property/:value')
   .get(function(req, res) {
-    var entryLimit = 50;
     var pageNumber = req.params.page;
-    var skipEntries = entryLimit*(pageNumber-1);
-    var queryObject = {};
-    queryObject[req.params.property] = req.params.value;
-    var displayObject = {};
-    displayObject['site_name'] = 1;
-    displayObject['technology'] = 2;
-
-    var query = Point.find(queryObject);
-    query.skip(skipEntries).limit(entryLimit).select(displayObject).exec('find', function(err, points) {
-      if (err)
-          res.send(err);
-
-      res.json(points);
-    });
-
+    var property = req.params.property;
+    var value = req.params.value;
+    if (property == 'null' && value == 'null') {
+      var query = Point.find();
+      getPointsForPage(req, res, pageNumber, query);
+    }
+    else {
+      var queryObject = {};
+      queryObject[property] = value;
+      var query = Point.find(queryObject);
+      getPointsForPage(req, res, pageNumber, query);
+    }
   });
-
 
   // REGISTER OUR ROUTES -------------------------------
   app.use('/api', router);
