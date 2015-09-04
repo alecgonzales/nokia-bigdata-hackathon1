@@ -41,6 +41,18 @@ router.route('/point/:point_id')
         });
     });
 
+router.route('/points/findByProperty/:property/:value')
+
+.get(function(req, res) {
+	var queryObject = {};
+	queryObject[req.params.property] = req.params.value;
+	Point.find(queryObject).exec(function(err, point) {
+		if (err)
+			res.send(err);
+		res.json(point);
+	}) ;
+});
+
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/api', router);
