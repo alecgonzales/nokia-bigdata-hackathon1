@@ -97,10 +97,10 @@ function updateTable(sites) {
   $("#maps table tbody").empty();
   _.forEach(sites, function(site) {
     var tableData = "<tr data-longitude=\"" + site.position.longitude + "\" data-latitude=\"" + site.position.latitude + "\">"
-      + "<td>" + site.site_name + "</td>"
+      + "<td>" + site.site_id + "</td>"
+      + "<td>" + site.operator + "</td>"
       + "<td>" + site.technology + "</td>"
       + "<td>" + site.site_type + "</td>"
-      + "<td>" + site.operator + "</td>"
       + "</tr>";
     $("#maps table").append(tableData);
     addTableClickEvent();
