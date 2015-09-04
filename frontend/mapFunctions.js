@@ -1,14 +1,26 @@
-
-google.maps.event.addDomListener(window, 'load', initialize);
+$(document).ready(function() {
+  initialize();
+});
 
 function initialize() {
   var map = initMap();
 
-  var siteData = getSiteData();
-  for (i = 0; i < siteData.length; i++) {
-    addMarker(map,siteData[i]);
-  }
-  updateTable(siteData);
+  markAllPointsOnMap(map);
+  updateTable(getSiteData());
+}
+
+function markAllPointsOnMap(map) {
+  $.get("/api/points", function(points) {
+    _.forEach(points, function(point) {
+      var marker = { name:"Site",
+        longitude:point.position.longitude,
+        latitude:point.position.latitude,
+        type:point.technology,
+        operator:point.operator
+      };
+      addMarker(map,marker);
+    });
+  });
 }
 
 function initMap() {
@@ -38,15 +50,14 @@ function addMarker(map,site) {
       position:coordinates,
       title:site.name,
       icon:"siteIcon.png",
+      map: map
     }
   );
-  marker.setMap(map);
   marker.addListener('click', function() { showSiteData(marker,site) } );
 }
 
-// TODO: Make sure to use correct property names
 function getSitePosition(site) {
-  return new google.maps.LatLng(site.longitude,site.latitude);
+  return new google.maps.LatLng(site.latitude,site.longitude);
 }
 
 function showSiteData(marker,site) {
@@ -69,12 +80,13 @@ function updateTable(siteData) {
   $("#maps table tbody").empty();
   var tableData = "";
   for (i = 0; i < siteData.length; i++) {
-    tableData = "<tr>"
-      + "<td>" + siteData[i].name + "</td>"
-      + "<td>" + siteData[i].technology + "</td>"
-      + "<td>" + siteData[i].type + "</td>"
-      + "<td>" + siteData[i].operator + "</td>"
+    var site = siteData[i];
+    tableData = "<tr data-longitude=\"" + site.longitude + "\" data-latitude=\"" + site.latitude + "\">"
+      + "<td>" + site.name + "</td>"
+      + "<td>" + site.technology + "</td>"
+      + "<td>" + site.type + "</td>"
+      + "<td>" + site.operator + "</td>"
       + "</tr>";
       $("#maps table").append(tableData);
-    }
+  }
 }
