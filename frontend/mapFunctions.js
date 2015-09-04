@@ -6,7 +6,7 @@ function initialize() {
   var map = initMap();
 
   markAllPointsOnMap(map);
-  updateTable(siteData);
+  updateTable(getSiteData());
 }
 
 function markAllPointsOnMap(map) {
