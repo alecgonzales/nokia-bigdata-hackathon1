@@ -12,10 +12,10 @@ html, body, #maps, .container-fluid {
 
 .sidebar {
   position: absolute;
-  top: -300px;
+  /*top: -300px;*/
   right: 0;
   height: 300px;
-  width: 400px;
+  width: 600px;
   border-left: 1px solid #000;
   border-bottom: 1px solid #000;
   background: #fff;
@@ -47,11 +47,5 @@ html, body, #maps, .container-fluid {
 }
 
 .sidebar .header {
-  position: absolute;
-  top: 0;
   background: white;
-}
-
-.sidebar table {
-  margin-top: 37px;
 }

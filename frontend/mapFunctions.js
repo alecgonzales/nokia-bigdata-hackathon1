@@ -87,9 +87,8 @@ function queryTableData(page,key,value) {
   key = key || 'null';
   value = value || 'null';
 
-  console.log("/api/points/" + page + '/'+ key + '/' + value);
-  $.get("/api/points/" + page + '/'+ key + '/' + value, function(points) {
-    console.log(points);
+  console.log(  );
+  $.get(["/api/points",page,key,value].join("/"), function(points) {
     updateTable(points);
   });
 }
