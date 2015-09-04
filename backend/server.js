@@ -18,6 +18,18 @@ var port = process.env.PORT || 8080;        // set our port
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
+var displayObject = {
+  'site_name':1,
+  'site_id':1,
+  'technology':1,
+  'operator':1,
+  'site_type':1,
+  'position.latitude':1,
+  'position.longitude':1,
+  'position.coordinates_source.radius':1,
+  'position.coordinates_source.position_type':1,
+};
+
 var getAllPoints = function(req, res) {
     Point.find(function(err, points) {
         if (err)
@@ -25,19 +37,10 @@ var getAllPoints = function(req, res) {
         res.json(points);
     });
 }
+
 var getPointsForPage = function(req, res, pageNumber, query) {
   var entryLimit = 50;
   var skipEntries = entryLimit*(pageNumber-1);
-  var displayObject = {
-    'site_name':1,
-    'technology':1,
-    'operator':1,
-    'site_type':1,
-    'position.latitude':1,
-    'position.longitude':1,
-    'position.coordinates_source.radius':1,
-    'position.coordinates_source.position_type':1,
-  };
 
   if(pageNumber!=0){
     query.skip(skipEntries).limit(entryLimit)
@@ -97,18 +100,18 @@ router.route('/points/:page/:property/:value')
     }
   });
 
-router.route('/points/wildfind/:wildid')
-.get(function(req, res) {
-	var queryObject = {
-      "position.coordinates_source.radius":parseInt(req.params.wildid,10)
-    };
-  console.log(queryObject);
-	Point.find(queryObject).exec(function(err, point) {
-		if (err)
-			res.send(err);
-		res.json(point);
-	}) ;
-});
+  router.route('/points/rad/:radius')
+  .get(function(req, res) {
+  	var queryObject = {
+        "position.coordinates_source.radius":parseInt(req.params.radius,10)
+      };
+    console.log(queryObject);
+  	Point.find(queryObject).exec(function(err, point) {
+  		if (err)
+  			res.send(err);
+  		res.json(point);
+  	}) ;
+  });
 
   // REGISTER OUR ROUTES -------------------------------
   app.use('/api', router);
