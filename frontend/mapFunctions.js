@@ -69,12 +69,13 @@ function updateTable(siteData) {
   $("#maps table tbody").empty();
   var tableData = "";
   for (i = 0; i < siteData.length; i++) {
-    tableData = "<tr>"
-      + "<td>" + siteData[i].name + "</td>"
-      + "<td>" + siteData[i].technology + "</td>"
-      + "<td>" + siteData[i].type + "</td>"
-      + "<td>" + siteData[i].operator + "</td>"
+    var site = siteData[i];
+    tableData = "<tr data-longitude=\"" + site.longitude + "\" data-latitude=\"" + site.latitude + "\">"
+      + "<td>" + site.name + "</td>"
+      + "<td>" + site.technology + "</td>"
+      + "<td>" + site.type + "</td>"
+      + "<td>" + site.operator + "</td>"
       + "</tr>";
       $("#maps table").append(tableData);
-    }
+  }
 }
