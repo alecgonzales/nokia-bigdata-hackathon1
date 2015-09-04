@@ -28,11 +28,16 @@ var getAllPoints = function(req, res) {
 var getPointsForPage = function(req, res, pageNumber, query) {
   var entryLimit = 50;
   var skipEntries = entryLimit*(pageNumber-1);
-  var displayObject = {};
+  var displayObject = {};x
+  displayObject['_id']=1;
   displayObject['site_name'] = 1;
-  displayObject['technology'] = 2;
+  displayObject['technology'] = 1;
 
-  query.skip(skipEntries).limit(entryLimit).select(displayObject)
+  if(pageNumber!=0){
+    query.skip(skipEntries).limit(entryLimit)
+  }
+
+  query.select(displayObject)
   .exec('find', function(err, points) {
     if (err)
         res.send(err);
@@ -74,9 +79,11 @@ router.route('/points/:page/:property/:value')
     var pageNumber = req.params.page;
     var property = req.params.property;
     var value = req.params.value;
-    if (pageNumber == 0 && property == 'null' && value == 'null') {
-      getAllPoints(req, res);
-    } else {
+    if (property == 'null' && value == 'null') {
+      var query = Point.find();
+      getPointsForPage(req, res, pageNumber, query);
+    }
+    else {
       var queryObject = {};
       queryObject[property] = value;
       var query = Point.find(queryObject);
