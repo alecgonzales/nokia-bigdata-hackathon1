@@ -6,6 +6,7 @@ function initialize() {
   var map = initMap();
 
   markAllPointsOnMap(map);
+  updateTable(siteData);
 }
 
 function markAllPointsOnMap(map) {
@@ -17,7 +18,6 @@ function markAllPointsOnMap(map) {
         type:point.technology,
         operator:point.operator
       };
-      console.log(marker);
       addMarker(map,marker);
     });
   });
@@ -37,8 +37,8 @@ function initMap() {
 function getSiteData()
 {
   var site = [
-    {name:"Site 1", longitude:14.58, latitude:121.00, type:"LTE", operator:"Globe"},
-    {name:"Site 2", longitude:14.63, latitude:121.03, type:"3G", operator:"Smart"}
+    {name:"Site 1", longitude:14.58, latitude:121.00, technology:"LTE", type:"Flexi", operator:"Globe"},
+    {name:"Site 2", longitude:14.63, latitude:121.03, technology:"3G", type:"Flexi", operator:"Smart"}
   ];
   return site;
 }
@@ -74,4 +74,18 @@ function showSiteData(marker,site) {
   map.setZoom(10);
   map.setCenter(marker.getPosition());
   infoWindow.open(map,marker);
+}
+
+function updateTable(siteData) {
+  $("#maps table tbody").empty();
+  var tableData = "";
+  for (i = 0; i < siteData.length; i++) {
+    tableData = "<tr>"
+      + "<td>" + siteData[i].name + "</td>"
+      + "<td>" + siteData[i].technology + "</td>"
+      + "<td>" + siteData[i].type + "</td>"
+      + "<td>" + siteData[i].operator + "</td>"
+      + "</tr>";
+      $("#maps table").append(tableData);
+    }
 }
