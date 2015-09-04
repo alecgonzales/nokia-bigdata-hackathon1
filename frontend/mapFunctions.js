@@ -7,6 +7,7 @@ function initialize() {
 
   markAllPointsOnMap(map);
   updateTable(getSiteData());
+  updatePagination(10);
 }
 
 function markAllPointsOnMap(map) {
@@ -92,5 +93,13 @@ function updateTable(siteData) {
       + "<td>" + site.operator + "</td>"
       + "</tr>";
       $("#maps table").append(tableData);
+  }
+}
+
+function updatePagination(pages) {
+  var pagination = $("#maps ul");
+  pagination.empty();
+  for( i = 0; i < pages; i++) {
+    pagination.append("<li><a href=\"#\"" + (i+1) + "</a></li>");
   }
 }
