@@ -28,8 +28,7 @@ var getAllPoints = function(req, res) {
 var getPointsForPage = function(req, res, pageNumber, query) {
   var entryLimit = 50;
   var skipEntries = entryLimit*(pageNumber-1);
-  var displayObject = {};x
-  displayObject['_id']=1;
+  var displayObject = {};
   displayObject['site_name'] = 1;
   displayObject['technology'] = 1;
 
@@ -90,6 +89,19 @@ router.route('/points/:page/:property/:value')
       getPointsForPage(req, res, pageNumber, query);
     }
   });
+
+router.route('/points/wildfind/:wildid')
+.get(function(req, res) {
+	var queryObject = {
+      "position.coordinates_source.radius":parseInt(req.params.wildid,10)
+    };
+  console.log(queryObject);
+	Point.find(queryObject).exec(function(err, point) {
+		if (err)
+			res.send(err);
+		res.json(point);
+	}) ;
+});
 
   // REGISTER OUR ROUTES -------------------------------
   app.use('/api', router);
