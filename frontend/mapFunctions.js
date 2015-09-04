@@ -8,6 +8,7 @@ function initialize() {
   markAllPointsOnMap(map);
   updateTable(getSiteData());
   updatePagination(10);
+  addTableClickEvent();
 }
 
 function markAllPointsOnMap(map) {
@@ -41,8 +42,8 @@ function initMap() {
 function getSiteData()
 {
   var site = [
-    {name:"Site 1", longitude:14.58, latitude:121.00, technology:"LTE", type:"Flexi", operator:"Globe"},
-    {name:"Site 2", longitude:14.63, latitude:121.03, technology:"3G", type:"Flexi", operator:"Smart"}
+    {name:"Site 1", longitude:121.00, latitude:14.58, technology:"LTE", type:"Flexi", operator:"Globe"},
+    {name:"Site 2", longitude:121.03, latitude:14.63, technology:"3G", type:"Flexi", operator:"Smart"}
   ];
   return site;
 }
@@ -103,3 +104,13 @@ function updatePagination(pages) {
     pagination.append("<li><a href=\"#\">" + (i+1) + "</a></li>");
   }
 }
+
+function addTableClickEvent() {
+  $( ".table tbody tr" ).on( "click", function( event ) {
+
+    var latitude = $(this).data("latitude");
+    var longitude = $(this).data("longitude");
+    map.setCenter(new google.maps.LatLng(latitude,longitude));
+    map.setZoom(15);
+  });
+};
