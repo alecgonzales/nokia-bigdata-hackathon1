@@ -91,7 +91,7 @@ function queryTableData(page,key,value) {
 function updateTable(sites) {
   $("#maps table tbody").empty();
   _.forEach(sites, function(site) {
-    var tableData = "<tr data-longitude=\"" + site.longitude + "\" data-latitude=\"" + site.latitude + "\">"
+    var tableData = "<tr data-longitude=\"" + site.position.longitude + "\" data-latitude=\"" + site.position.latitude + "\">"
       + "<td>" + site.site_name + "</td>"
       + "<td>" + site.technology + "</td>"
       + "<td>" + site.site_type + "</td>"
