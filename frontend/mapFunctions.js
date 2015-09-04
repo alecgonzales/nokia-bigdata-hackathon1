@@ -103,6 +103,7 @@ function updateTable(sites) {
       + "<td>" + site.operator + "</td>"
       + "</tr>";
     $("#maps table").append(tableData);
+    addTableClickEvent();
   });
 }
 
@@ -116,7 +117,6 @@ function updatePagination(pages) {
 
 function addTableClickEvent() {
   $( ".table tbody tr" ).on( "click", function( event ) {
-
     var latitude = $(this).data("latitude");
     var longitude = $(this).data("longitude");
     map.setCenter(new google.maps.LatLng(latitude,longitude));
