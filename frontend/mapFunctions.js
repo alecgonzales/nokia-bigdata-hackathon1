@@ -7,9 +7,12 @@ function initialize() {
 
   markAllPointsOnMap(map);
   queryTableData();
+  updatePagination(10);
+  addTableClickEvent();
 }
 
 function markAllPointsOnMap(map) {
+  var markers = [];
   $.get("/api/points", function(points) {
     _.forEach(points, function(point) {
       var marker = { name:point.site_id,
@@ -18,8 +21,10 @@ function markAllPointsOnMap(map) {
         type:point.technology,
         operator:point.operator
       };
-      addMarker(map,marker);
+      var createdMarker = createMarker(map,marker);
+      markers.push(createdMarker);
     });
+    var markerCluster = new MarkerClusterer(map, markers);
   });
 }
 
@@ -37,13 +42,13 @@ function initMap() {
 function getSiteData()
 {
   var site = [
-    {name:"Site 1", longitude:14.58, latitude:121.00, technology:"LTE", type:"Flexi", operator:"Globe"},
-    {name:"Site 2", longitude:14.63, latitude:121.03, technology:"3G", type:"Flexi", operator:"Smart"}
+    {name:"Site 1", longitude:121.00, latitude:14.58, technology:"LTE", type:"Flexi", operator:"Globe"},
+    {name:"Site 2", longitude:121.03, latitude:14.63, technology:"3G", type:"Flexi", operator:"Smart"}
   ];
   return site;
 }
 
-function addMarker(map,site) {
+function createMarker(map,site) {
   var coordinates = getSitePosition(site);
   var marker = new google.maps.Marker(
     {
@@ -54,6 +59,7 @@ function addMarker(map,site) {
     }
   );
   marker.addListener('click', function() { showSiteData(marker,site) } );
+  return marker;
 }
 
 function getSitePosition(site) {
@@ -71,7 +77,7 @@ function showSiteData(marker,site) {
     }
   );
   var map = marker.getMap();
-  map.setZoom(10);
+  map.setZoom(15);
   map.setCenter(marker.getPosition());
   infoWindow.open(map,marker);
 }
@@ -100,3 +106,21 @@ function updateTable(sites) {
     $("#maps table").append(tableData);
   });
 }
+
+function updatePagination(pages) {
+  var pagination = $("#maps ul");
+  pagination.empty();
+  for( i = 0; i < pages; i++) {
+    pagination.append("<li><a href=\"#\">" + (i+1) + "</a></li>");
+  }
+}
+
+function addTableClickEvent() {
+  $( ".table tbody tr" ).on( "click", function( event ) {
+
+    var latitude = $(this).data("latitude");
+    var longitude = $(this).data("longitude");
+    map.setCenter(new google.maps.LatLng(latitude,longitude));
+    map.setZoom(15);
+  });
+};
