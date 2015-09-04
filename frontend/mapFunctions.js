@@ -31,7 +31,7 @@ function getSiteData()
 }
 
 function addMarker(map,site) {
-  var coordinates = new google.maps.LatLng(site.longitude,site.latitude);
+  var coordinates = getSitePosition(site);
   var marker = new google.maps.Marker(
     {
       position:coordinates,
@@ -43,10 +43,15 @@ function addMarker(map,site) {
   marker.addListener('click', function() { showSiteData(marker,site) } );
 }
 
+// TODO: Make sure to use correct property names
+function getSitePosition(site) {
+  return new google.maps.LatLng(site.longitude,site.latitude);
+}
+
 function showSiteData(marker,site) {
   var siteDetails = "";
   for (x in site) {
-    siteDetails += site[x] + "<br/>";
+    siteDetails += x + ": " + site[x] + "<br/>";
   }
   var infoWindow = new google.maps.InfoWindow(
     {
