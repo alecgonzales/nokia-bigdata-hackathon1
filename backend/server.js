@@ -44,6 +44,7 @@ router.route('/point/:point_id')
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/api', router);
+app.use('/', express.static('../frontend'));
 
 // START THE SERVER
 // =============================================================================
