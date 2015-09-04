@@ -100,6 +100,6 @@ function updatePagination(pages) {
   var pagination = $("#maps ul");
   pagination.empty();
   for( i = 0; i < pages; i++) {
-    pagination.append("<li><a href=\"#\"" + (i+1) + "</a></li>");
+    pagination.append("<li><a href=\"#\">" + (i+1) + "</a></li>");
   }
 }
