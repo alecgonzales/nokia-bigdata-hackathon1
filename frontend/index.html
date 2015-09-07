@@ -31,7 +31,38 @@
         <div class="col-md-12" id="googleMap"></div>
         <div class="col-md-12 sidebar">
           <div class="row">
-            <div class="col-md-offset-8 col-md-4">Search bar</div>
+            <div class="col-md-offset-7 col-md-5">
+              <div class="input-group">
+                <div class="form-group has-feedback">
+                  <input type="text" class="form-control" id="searchbar" placeholder="Search here">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+                <div class="input-group-btn dropdown">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul id="search_key" class="dropdown-menu dropdown-menu-right">
+                    <!--<li><div class="radio">
+                      <label><input type="radio" name="search_key" value="site_id">Site ID</label></div>
+                    </li>
+                    <li><div class="radio">
+                      <label><input type="radio" name="search_key" value="operator">Operator</label></div>
+                    </li>
+                    <li><div class="radio">
+                      <label><input type="radio" name="search_key" value="technology">Technology</label></div>
+                    </li>
+                    <li><div class="radio">
+                      <label><input type="radio" name="search_key" value="site_type">Site Type</label></div>
+                    </li>-->
+                    <li class="dropdown-header">Search by:</li>
+                    <li><a href="#">Site Id</a></li>
+                    <li><a href="#">Technology</a></li>
+                    <li><a href="#">Operator</a></li>
+                    <li><a href="#">Site Type</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
             <div class="col-md-12">
               <table class="table table-striped">
                 <thead class="header">

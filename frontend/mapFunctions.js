@@ -28,6 +28,7 @@ function initMap() {
 }
 
 function markAllPointsOnMap() {
+  clearAllMarkers();
   $.get("/api/points", function(points) {
     _.forEach(points, function(point) {
       var marker = { name:point.site_id,
@@ -41,6 +42,10 @@ function markAllPointsOnMap() {
     });
     var markerCluster = new MarkerClusterer(appData.map,appData.markers);
   });
+}
+
+function clearAllMarkers(){
+  appData.markers = [];
 }
 
 function createMarker(map,site) {
@@ -119,7 +124,7 @@ function updateTable(sites) {
 }
 
 function updatePagination(pages) {
-  var pagination = $("#maps ul");
+  var pagination = $("#maps .pagination");
   pagination.empty();
   for( i = 0; i < pages; i++) {
     pagination.append("<li><a>" + (i+1) + "</a></li>");
