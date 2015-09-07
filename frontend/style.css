@@ -49,3 +49,8 @@ html, body, #maps, .container-fluid {
 .sidebar .header {
   background: white;
 }
+
+#currentPage {
+  font-weight: bold;
+  background-color: #aaf;
+}

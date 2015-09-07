@@ -6,13 +6,14 @@ var appData = {
   map:null,
   markers:[],
   lastSelected:null,
+  itemsInTable:0,
+  currentPage:1,
 }
 
 function initialize() {
-  initMap(appData);
-  markAllPointsOnMap(appData);
+  initMap();
+  markAllPointsOnMap();
   queryTableData();
-  updatePagination(10);
   addTableClickEvent();
 }
 
@@ -39,6 +40,7 @@ function markAllPointsOnMap() {
       appData.markers.push(createdMarker);
     });
     var markerCluster = new MarkerClusterer(appData.map,appData.markers);
+    updatePagination();
   });
 }
 
@@ -93,9 +95,10 @@ function queryTableData(page,key,value) {
   key = key || 'null';
   value = value || 'null';
 
-  console.log(  );
   $.get(["/api/points",page,key,value].join("/"), function(points) {
+    appData.itemsInTable = points.length;
     updateTable(points);
+    updatePagination();
   });
 }
 
@@ -114,12 +117,70 @@ function updateTable(sites) {
   });
 }
 
-function updatePagination(pages) {
-  var pagination = $("#maps ul");
-  pagination.empty();
-  for( i = 0; i < pages; i++) {
-    pagination.append("<li><a>" + (i+1) + "</a></li>");
+function updatePagination() {
+  if ( (appData.markers.length > 0) && (appData.itemsInTable > 0) )
+  {
+    var pages = Math.ceil(appData.markers.length / 50);
+    var pagination = $(".pagination");
+    pagination.empty();
+    if (pages > 0)
+    {
+      if (appData.currentPage !== 1) {
+        pagination.append("<li><a href='#'>&#60;&#60;</a></li>");
+        pagination.append("<li><a href='#'>&#60;</a></li>");
+      }
+      appendCurrentAndNearbyPages(pagination,pages);
+      if (appData.currentPage !== pages) {
+        pagination.append("<li><a href='#'>&#62;</a></li>");
+        pagination.append("<li><a href='#'>&#62;&#62;</a></li>");
+      }
+    }
+    $( ".pagination li" ).on( "click", function() {
+      var text = $(this).text();
+      if (text == "<<") {
+        appData.currentPage = 1;
+      }
+      else if ((text == "<") && (appData.currentPage > 1)) {
+        appData.currentPage--;
+      }
+      else if ((text == ">") && (appData.currentPage < (pages-1))) {
+        appData.currentPage++;
+      }
+      else if (text == ">>") {
+        appData.currentPage = pages;
+      }
+      else {
+        appData.currentPage = parseInt(text);
+      }
+      queryTableData(appData.currentPage);
+    });
   }
+}
+
+function appendCurrentAndNearbyPages(pagination,pages) {
+  var pagesToShow = getPagesToShow(pages);
+  for (i = 0; i < pagesToShow.length; i++) {
+    if (pagesToShow[i] === appData.currentPage) {
+      pagination.append("<li><a href='#' id='currentPage'>" + pagesToShow[i] + "</a></li>");
+    }
+    else {
+      pagination.append("<li><a href='#'>" + pagesToShow[i] + "</a></li>");
+    }
+  }
+}
+
+function getPagesToShow(pages) {
+  var nearbyPages = [];
+  var pagesToShow = [];
+  for (i = -4; i < 5; i++) {
+    nearbyPages.push(appData.currentPage+i);
+  }
+  for (i = 0; i < nearbyPages.length; i++) {
+    if ((nearbyPages[i] > 0) && (nearbyPages[i] <= pages)) {
+      pagesToShow.push(nearbyPages[i]);
+    }
+  }
+  return pagesToShow;
 }
 
 function addTableClickEvent() {
