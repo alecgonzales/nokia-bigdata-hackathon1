@@ -2,30 +2,18 @@ $(document).ready(function() {
   initialize();
 });
 
-function initialize() {
-  var map = initMap();
+var appData = {
+  map:null,
+  markers:[],
+  lastSelected:null,
+}
 
-  markAllPointsOnMap(map);
+function initialize() {
+  initMap(appData);
+  markAllPointsOnMap(appData);
   queryTableData();
   updatePagination(10);
   addTableClickEvent();
-}
-
-function markAllPointsOnMap(map) {
-  var markers = [];
-  $.get("/api/points", function(points) {
-    _.forEach(points, function(point) {
-      var marker = { name:point.site_id,
-        longitude:point.position.longitude,
-        latitude:point.position.latitude,
-        type:point.technology,
-        operator:point.operator
-      };
-      var createdMarker = createMarker(map,marker);
-      markers.push(createdMarker);
-    });
-    var markerCluster = new MarkerClusterer(map, markers);
-  });
 }
 
 function initMap() {
@@ -35,51 +23,69 @@ function initMap() {
     disableDefaultUI: true,
     mapTypeId:google.maps.MapTypeId.ROADMAP
   };
-  return map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+  appData.map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 }
 
-// TODO: Send GET query for site data
-function getSiteData()
-{
-  var site = [
-    {name:"Site 1", longitude:121.00, latitude:14.58, technology:"LTE", type:"Flexi", operator:"Globe"},
-    {name:"Site 2", longitude:121.03, latitude:14.63, technology:"3G", type:"Flexi", operator:"Smart"}
-  ];
-  return site;
+function markAllPointsOnMap() {
+  $.get("/api/points", function(points) {
+    _.forEach(points, function(point) {
+      var marker = { name:point.site_id,
+        longitude:point.position.longitude,
+        latitude:point.position.latitude,
+        type:point.technology,
+        operator:point.operator
+      };
+      var createdMarker = createMarker(appData.map,marker);
+      appData.markers.push(createdMarker);
+    });
+    var markerCluster = new MarkerClusterer(appData.map,appData.markers);
+  });
 }
 
 function createMarker(map,site) {
-  var coordinates = getSitePosition(site);
   var marker = new google.maps.Marker(
     {
-      position:coordinates,
+      position:new google.maps.LatLng(site.latitude,site.longitude),
       title:site.name,
       icon:"siteIcon.png",
-      map: map
+      map:map,
+      infoWindow:createInfoWindow(site),
     }
   );
-  marker.addListener('click', function() { showSiteData(marker,site) } );
+  marker.addListener('click', function() { setSelected(marker) } );
   return marker;
 }
 
-function getSitePosition(site) {
-  return new google.maps.LatLng(site.latitude,site.longitude);
+function createInfoWindow(site) {
+  var infoWindow = new google.maps.InfoWindow(
+    {
+      content:getSiteDetails(site)
+    }
+  );
+  return infoWindow;
 }
 
-function showSiteData(marker,site) {
+function getSiteDetails(site) {
   var siteDetails = "";
   for (x in site) {
     siteDetails += x + ": " + site[x] + "<br/>";
   }
-  var infoWindow = new google.maps.InfoWindow(
-    {
-      content:siteDetails
+  return siteDetails;
+}
+
+function setSelected(selected) {
+  if (appData.lastSelected != null) {
+    if (appData.lastSelected === selected) {
+      return;
     }
-  );
-  var map = marker.getMap();
-  map.setZoom(15);
-  map.setCenter(marker.getPosition());
-  infoWindow.open(map,marker);
+    else {
+      appData.lastSelected.setAnimation(null);
+    }
+  }
+  appData.map.setCenter(selected.getPosition());
+  selected.infoWindow.open(appData.map,selected);
+  selected.setAnimation(google.maps.Animation.BOUNCE);
+  appData.lastSelected = selected;
 }
 
 function queryTableData(page,key,value) {
@@ -95,8 +101,9 @@ function queryTableData(page,key,value) {
 
 function updateTable(sites) {
   $("#maps table tbody").empty();
+  var index = 0;
   _.forEach(sites, function(site) {
-    var tableData = "<tr data-longitude=\"" + site.position.longitude + "\" data-latitude=\"" + site.position.latitude + "\">"
+    var tableData = "<tr data-index='" + index++ + "'>"
       + "<td>" + site.site_name + "</td>"
       + "<td>" + site.technology + "</td>"
       + "<td>" + site.site_type + "</td>"
@@ -111,15 +118,16 @@ function updatePagination(pages) {
   var pagination = $("#maps ul");
   pagination.empty();
   for( i = 0; i < pages; i++) {
-    pagination.append("<li><a href=\"#\">" + (i+1) + "</a></li>");
+    pagination.append("<li><a>" + (i+1) + "</a></li>");
   }
 }
 
 function addTableClickEvent() {
   $( ".table tbody tr" ).on( "click", function( event ) {
-    var latitude = $(this).data("latitude");
-    var longitude = $(this).data("longitude");
-    map.setCenter(new google.maps.LatLng(latitude,longitude));
-    map.setZoom(15);
+    var index = $(this).data("index")
+    var marker = appData.markers[index];
+    setSelected(marker);
+    // marker.setIcon("pikachu.png");
+    appData.map.setZoom(20);
   });
 };
