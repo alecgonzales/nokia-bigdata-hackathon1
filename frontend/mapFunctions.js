@@ -6,7 +6,7 @@ var appData = {
   map:null,
   markers:[],
   lastSelected:null,
-  appData.markerCluster:null,
+  markerCluster:null,
   clearOverlays: function() {
     _.forEach(this.markers, function(marker) {
       marker.setMap(null)
