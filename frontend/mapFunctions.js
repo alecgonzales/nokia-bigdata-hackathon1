@@ -6,6 +6,16 @@ var appData = {
   map:null,
   markers:[],
   lastSelected:null,
+  appData.markerCluster:null,
+  clearOverlays: function() {
+    _.forEach(this.markers, function(marker) {
+      marker.setMap(null)
+    })
+    this.markers.length = 0
+    if (appData.markerCluster) {
+      appData.markerCluster.clearMarkers()
+    }
+  }
 }
 
 function initialize() {
@@ -36,7 +46,7 @@ function initMap() {
 }
 
 function markAllPointsOnMap(url) {
-  clearAllMarkers();
+  appData.clearOverlays();
   $.get(url, function(points) {
     _.forEach(points, function(point) {
       var marker = { name:point.site_id,
@@ -48,12 +58,8 @@ function markAllPointsOnMap(url) {
       var createdMarker = createMarker(appData.map,marker);
       appData.markers.push(createdMarker);
     });
-    var markerCluster = new MarkerClusterer(appData.map,appData.markers);
+    appData.markerCluster = new MarkerClusterer(appData.map,appData.markers);
   });
-}
-
-function clearAllMarkers(){
-  appData.markers = [];
 }
 
 function createMarker(map,site) {
