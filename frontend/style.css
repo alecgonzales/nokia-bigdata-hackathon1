@@ -49,3 +49,11 @@ html, body, #maps, .container-fluid {
 .sidebar .header {
   background: white;
 }
+
+.sidebar ul li .glyphicon {
+  display: none;
+}
+
+.sidebar ul li.selected .glyphicon {
+  display: inline;
+}

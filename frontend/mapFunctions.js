@@ -9,11 +9,20 @@ var appData = {
 }
 
 function initialize() {
-  initMap(appData);
-  markAllPointsOnMap(appData);
-  queryTableData();
-  updatePagination(10);
-  addTableClickEvent();
+  initMap()
+  synchronizeMapPointsWithTable()
+  bindSearchEvents()
+  updatePagination(10)
+  addTableClickEvent()
+}
+
+function synchronizeMapPointsWithTable() {
+  var page = page || 1
+  var key = $('#search-key li.selected').attr('id') || 'null'
+  var value = $('#search-value').val() || 'null'
+
+  markAllPointsOnMap(["/api/points","0",key,value].join("/"))
+  queryTableData(page,key,value)
 }
 
 function initMap() {
@@ -26,8 +35,8 @@ function initMap() {
   appData.map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 }
 
-function markAllPointsOnMap() {
-  $.get("/api/points", function(points) {
+function markAllPointsOnMap(url) {
+  $.get(url, function(points) {
     _.forEach(points, function(point) {
       var marker = { name:point.site_id,
         longitude:point.position.longitude,
@@ -89,11 +98,6 @@ function setSelected(selected) {
 }
 
 function queryTableData(page,key,value) {
-  page = page || 1;
-  key = key || 'null';
-  value = value || 'null';
-
-  console.log(  );
   $.get(["/api/points",page,key,value].join("/"), function(points) {
     updateTable(points);
   });
@@ -131,3 +135,38 @@ function addTableClickEvent() {
     appData.map.setZoom(30);
   });
 };
+
+siteSearch: {
+  function bindSearchEvents() {
+    bindInputSearchEvent()
+    bindDropdownEvent()
+  }
+
+  function bindInputSearchEvent() {
+    var typingTimer;
+    var triggerInterval = 2000;
+    var searchBar = $('input#search-value')
+
+    searchBar.on('keyup', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(function() {
+        synchronizeMapPointsWithTable()
+      }, triggerInterval);
+    });
+
+    searchBar.on('keydown', function() {
+      clearTimeout(typingTimer);
+    });
+  }
+
+  function bindDropdownEvent() {
+    $('#search-key li').click( function() {
+      $('#search-key li').each( function() {
+        $(this).removeClass('selected')
+      })
+      $(this).addClass('selected')
+      synchronizeMapPointsWithTable()
+    })
+  }
+
+}
