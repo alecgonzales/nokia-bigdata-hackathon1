@@ -106,7 +106,7 @@ function setSelected(selected) {
   }
   appData.map.setCenter(selected.getPosition());
   selected.infoWindow.open(appData.map,selected);
-  //selected.setIcon("pikachu.png");
+  selected.setIcon("pikachu.png");
   selected.setAnimation(google.maps.Animation.BOUNCE);
   appData.lastSelected = selected;
 }
@@ -134,11 +134,11 @@ function updateTable(sites) {
 }
 
 function updatePagination() {
+  var pagination = $(".pagination");
+  pagination.empty();
   if (appData.markers.length > 0)
   {
     var pages = Math.ceil(appData.markers.length / 50);
-    var pagination = $(".pagination");
-    pagination.empty();
     if (pages > 0)
     {
       if (appData.currentPage !== 1) {
@@ -156,10 +156,10 @@ function updatePagination() {
       if (text == "<<") {
         appData.currentPage = 1;
       }
-      else if ((text == "<") && (appData.currentPage > 1)) {
+      else if (text == "<") {
         appData.currentPage--;
       }
-      else if ((text == ">") && (appData.currentPage < (pages-1))) {
+      else if (text == ">") {
         appData.currentPage++;
       }
       else if (text == ">>") {
@@ -168,7 +168,9 @@ function updatePagination() {
       else {
         appData.currentPage = parseInt(text);
       }
-      queryTableData(appData.currentPage);
+      var key = $('#search-key li.selected').attr('id') || 'null'
+      var value = $('#search-value').val() || 'null'
+      queryTableData(appData.currentPage,key,value);
     });
   }
 }
@@ -238,6 +240,7 @@ siteSearch: {
         $(this).removeClass('selected')
       })
       $(this).addClass('selected')
+      appData.currentPage = 1;
       synchronizeMapPointsWithTable()
     })
   }

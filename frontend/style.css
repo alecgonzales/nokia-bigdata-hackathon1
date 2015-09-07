@@ -12,9 +12,9 @@ html, body, #maps, .container-fluid {
 
 .sidebar {
   position: absolute;
-  top: -300px;
+  top: -400px;
   right: 0;
-  height: 300px;
+  height: 400px;
   width: 600px;
   border-left: 1px solid #000;
   border-bottom: 1px solid #000;
@@ -33,7 +33,7 @@ html, body, #maps, .container-fluid {
   border-bottom: 1px solid #000;
   border-bottom-left-radius: 10px;
   background: #fff;
-  content: "hover me";
+  content: "SEARCH";
 }
 
 .sidebar:hover {
