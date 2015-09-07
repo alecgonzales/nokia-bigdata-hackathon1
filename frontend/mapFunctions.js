@@ -104,10 +104,10 @@ function updateTable(sites) {
   var index = 0;
   _.forEach(sites, function(site) {
     var tableData = "<tr data-index='" + index++ + "'>"
-      + "<td>" + site.site_name + "</td>"
+      + "<td>" + site.site_id + "</td>"
+      + "<td>" + site.operator + "</td>"
       + "<td>" + site.technology + "</td>"
       + "<td>" + site.site_type + "</td>"
-      + "<td>" + site.operator + "</td>"
       + "</tr>";
     $("#maps table").append(tableData);
     addTableClickEvent();
@@ -128,6 +128,6 @@ function addTableClickEvent() {
     var marker = appData.markers[index];
     setSelected(marker);
     // marker.setIcon("pikachu.png");
-    appData.map.setZoom(20);
+    appData.map.setZoom(30);
   });
 };
