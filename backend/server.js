@@ -94,7 +94,7 @@ router.route('/points/:page/:property/:value')
     }
     else {
       var queryObject = {};
-      queryObject[property] = value;
+      queryObject[property] = new RegExp(req.params.value, "i");
       var query = Point.find(queryObject);
       getPointsForPage(req, res, pageNumber, query);
     }

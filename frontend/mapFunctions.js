@@ -24,6 +24,7 @@ function initialize() {
   bindSearchEvents()
   updatePagination(10)
   addTableClickEvent()
+  addTableHoverEvent()
 }
 
 function synchronizeMapPointsWithTable() {
@@ -100,10 +101,12 @@ function setSelected(selected) {
     }
     else {
       appData.lastSelected.setAnimation(null);
+      appData.lastSelected.setIcon("siteicon.png");
     }
   }
   appData.map.setCenter(selected.getPosition());
   selected.infoWindow.open(appData.map,selected);
+  //selected.setIcon("pikachu.png");
   selected.setAnimation(google.maps.Animation.BOUNCE);
   appData.lastSelected = selected;
 }
@@ -126,6 +129,7 @@ function updateTable(sites) {
       + "</tr>";
     $("#maps table").append(tableData);
     addTableClickEvent();
+    addTableHoverEvent()
   });
 }
 
@@ -139,10 +143,11 @@ function updatePagination(pages) {
 
 function addTableClickEvent() {
   $( ".table tbody tr" ).on( "click", function( event ) {
+    $(this).addClass('selected').siblings().removeClass('selected');
     var index = $(this).data("index")
     var marker = appData.markers[index];
     setSelected(marker);
-    // marker.setIcon("pikachu.png");
+    //marker.setIcon("pikachu.png");
     appData.map.setZoom(30);
   });
 };
@@ -181,3 +186,9 @@ siteSearch: {
   }
 
 }
+
+function addTableHoverEvent() {
+  $( ".table tbody tr" ).hover(function() {
+    $(this).addClass('highlight').siblings().removeClass('highlight');
+  });
+};

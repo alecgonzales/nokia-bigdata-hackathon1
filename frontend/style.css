@@ -57,3 +57,10 @@ html, body, #maps, .container-fluid {
 .sidebar ul li.selected .glyphicon {
   display: inline;
 }
+
+.table tbody tr {
+    cursor: pointer;
+}
+
+.table-striped tbody tr.selected td { background-color: aquamarine; }
+.table-striped tbody tr.highlight td { background-color: bisque; }
