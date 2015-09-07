@@ -36,6 +36,7 @@ function initMap() {
 }
 
 function markAllPointsOnMap(url) {
+  clearAllMarkers();
   $.get(url, function(points) {
     _.forEach(points, function(point) {
       var marker = { name:point.site_id,
@@ -49,6 +50,10 @@ function markAllPointsOnMap(url) {
     });
     var markerCluster = new MarkerClusterer(appData.map,appData.markers);
   });
+}
+
+function clearAllMarkers(){
+  appData.markers = [];
 }
 
 function createMarker(map,site) {
@@ -144,7 +149,7 @@ siteSearch: {
 
   function bindInputSearchEvent() {
     var typingTimer;
-    var triggerInterval = 2000;
+    var triggerInterval = 1000;
     var searchBar = $('input#search-value')
 
     searchBar.on('keyup', function() {
