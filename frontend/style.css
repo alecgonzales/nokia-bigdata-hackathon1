@@ -54,3 +54,18 @@ html, body, #maps, .container-fluid {
   font-weight: bold;
   background-color: #aaf;
 }
+
+.sidebar ul li .glyphicon {
+  display: none;
+}
+
+.sidebar ul li.selected .glyphicon {
+  display: inline;
+}
+
+.table tbody tr {
+    cursor: pointer;
+}
+
+.sidebar .table-hover tbody tr:hover { background-color: bisque; }
+.table-striped tbody tr.selected td { background-color: aquamarine; }

@@ -6,15 +6,32 @@ var appData = {
   map:null,
   markers:[],
   lastSelected:null,
-  itemsInTable:0,
   currentPage:1,
+  markerCluster:null,
+  clearOverlays: function() {
+    _.forEach(this.markers, function(marker) {
+      marker.setMap(null)
+    })
+    this.markers.length = 0
+    if (appData.markerCluster) {
+      appData.markerCluster.clearMarkers()
+    }
+  }
 }
 
 function initialize() {
-  initMap();
-  markAllPointsOnMap();
-  queryTableData();
-  addTableClickEvent();
+  initMap()
+  synchronizeMapPointsWithTable()
+  bindSearchEvents()
+}
+
+function synchronizeMapPointsWithTable() {
+  var page = page || 1
+  var key = $('#search-key li.selected').attr('id') || 'null'
+  var value = $('#search-value').val() || 'null'
+
+  markAllPointsOnMap(["/api/points","0",key,value].join("/"))
+  queryTableData(page,key,value)
 }
 
 function initMap() {
@@ -27,8 +44,9 @@ function initMap() {
   appData.map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 }
 
-function markAllPointsOnMap() {
-  $.get("/api/points", function(points) {
+function markAllPointsOnMap(url) {
+  appData.clearOverlays();
+  $.get(url, function(points) {
     _.forEach(points, function(point) {
       var marker = { name:point.site_id,
         longitude:point.position.longitude,
@@ -39,7 +57,7 @@ function markAllPointsOnMap() {
       var createdMarker = createMarker(appData.map,marker);
       appData.markers.push(createdMarker);
     });
-    var markerCluster = new MarkerClusterer(appData.map,appData.markers);
+    appData.markerCluster = new MarkerClusterer(appData.map,appData.markers);
     updatePagination();
   });
 }
@@ -82,21 +100,19 @@ function setSelected(selected) {
     }
     else {
       appData.lastSelected.setAnimation(null);
+      appData.lastSelected.setIcon("siteicon.png");
+      appData.lastSelected.infoWindow.close();
     }
   }
   appData.map.setCenter(selected.getPosition());
   selected.infoWindow.open(appData.map,selected);
+  //selected.setIcon("pikachu.png");
   selected.setAnimation(google.maps.Animation.BOUNCE);
   appData.lastSelected = selected;
 }
 
 function queryTableData(page,key,value) {
-  page = page || 1;
-  key = key || 'null';
-  value = value || 'null';
-
   $.get(["/api/points",page,key,value].join("/"), function(points) {
-    appData.itemsInTable = points.length;
     updateTable(points);
     updatePagination();
   });
@@ -113,12 +129,12 @@ function updateTable(sites) {
       + "<td>" + site.site_type + "</td>"
       + "</tr>";
     $("#maps table").append(tableData);
-    addTableClickEvent();
   });
+  addTableClickEvent();
 }
 
 function updatePagination() {
-  if ( (appData.markers.length > 0) && (appData.itemsInTable > 0) )
+  if (appData.markers.length > 0)
   {
     var pages = Math.ceil(appData.markers.length / 50);
     var pagination = $(".pagination");
@@ -183,12 +199,46 @@ function getPagesToShow(pages) {
   return pagesToShow;
 }
 
-function addTableClickEvent() {
+function addTableClickEvent(element) {
   $( ".table tbody tr" ).on( "click", function( event ) {
+    $(this).addClass('selected').siblings().removeClass('selected');
     var index = $(this).data("index")
     var marker = appData.markers[index];
     setSelected(marker);
-    // marker.setIcon("pikachu.png");
     appData.map.setZoom(30);
   });
 };
+
+siteSearch: {
+  function bindSearchEvents() {
+    bindInputSearchEvent()
+    bindDropdownEvent()
+  }
+
+  function bindInputSearchEvent() {
+    var typingTimer;
+    var triggerInterval = 1000;
+    var searchBar = $('input#search-value')
+
+    searchBar.on('keyup', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(function() {
+        synchronizeMapPointsWithTable()
+      }, triggerInterval);
+    });
+
+    searchBar.on('keydown', function() {
+      clearTimeout(typingTimer);
+    });
+  }
+
+  function bindDropdownEvent() {
+    $('#search-key li').click( function() {
+      $('#search-key li').each( function() {
+        $(this).removeClass('selected')
+      })
+      $(this).addClass('selected')
+      synchronizeMapPointsWithTable()
+    })
+  }
+}

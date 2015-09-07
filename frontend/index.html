@@ -31,9 +31,32 @@
         <div class="col-md-12" id="googleMap"></div>
         <div class="col-md-12 sidebar">
           <div class="row">
-            <div class="col-md-offset-8 col-md-4">Search bar</div>
+            <div class="col-md-offset-7 col-md-5">
+              <div id=search-bar class="input-group">
+                <div class="form-group has-feedback">
+                  <input type="text" class="form-control" id="search-value" placeholder="Search here">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+                <div class="input-group-btn dropdown">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul id="search-key" class="dropdown-menu dropdown-menu-right">
+                    <li class="dropdown-header">Search by:</li>
+                    <li id="site_id" class="selected">
+                      <a href="#"><span class="glyphicon glyphicon-ok"></span> Site Id</a></li>
+                    <li id="operator">
+                      <a href="#"><span class="glyphicon glyphicon-ok"></span> Operator</a></li>
+                    <li id="technology">
+                      <a href="#"><span class="glyphicon glyphicon-ok"></span> Technology</a></li>
+                    <li id="site_type">
+                      <a href="#"><span class="glyphicon glyphicon-ok"></span> Site Type</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
             <div class="col-md-12">
-              <table class="table table-striped">
+              <table class="table table-striped table-hover">
                 <thead class="header">
                   <tr>
                     <th>Site ID</th>
