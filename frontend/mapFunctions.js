@@ -102,6 +102,7 @@ function setSelected(selected) {
     else {
       appData.lastSelected.setAnimation(null);
       appData.lastSelected.setIcon("siteicon.png");
+      appData.lastSelected.infoWindow.close();
     }
   }
   appData.map.setCenter(selected.getPosition());
@@ -128,9 +129,9 @@ function updateTable(sites) {
       + "<td>" + site.site_type + "</td>"
       + "</tr>";
     $("#maps table").append(tableData);
-    addTableClickEvent();
-    addTableHoverEvent()
   });
+  addTableClickEvent();
+  addTableHoverEvent();
 }
 
 function updatePagination(pages) {
