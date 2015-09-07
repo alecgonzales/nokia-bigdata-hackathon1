@@ -49,3 +49,19 @@ html, body, #maps, .container-fluid {
 .sidebar .header {
   background: white;
 }
+
+.table tbody tr {
+    cursor: pointer;
+}
+
+.table-striped tbody tr.selected td { background-color: aquamarine; }
+.table-striped tbody tr.highlight td { background-color: bisque; }
+
+
+/*.table tbody tr:nth-child(2n+1) {
+    background: pink;
+}
+.table tbody th a:link, th a:active, th a:visited {
+    color: #525357;
+    font-weight: bold;
+}*/
