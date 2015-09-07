@@ -88,7 +88,7 @@ router.route('/points/:page/:property/:value')
     var pageNumber = req.params.page;
     var property = req.params.property;
     var value = req.params.value;
-    if (property == 'null' && value == 'null') {
+    if (value == 'null') {
       var query = Point.find();
       getPointsForPage(req, res, pageNumber, query);
     }
