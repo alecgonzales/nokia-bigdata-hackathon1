@@ -27,6 +27,7 @@ function initMap() {
 }
 
 function markAllPointsOnMap() {
+  clearAllMarkers();
   $.get("/api/points", function(points) {
     _.forEach(points, function(point) {
       var marker = { name:point.site_id,
@@ -40,6 +41,10 @@ function markAllPointsOnMap() {
     });
     var markerCluster = new MarkerClusterer(appData.map,appData.markers);
   });
+}
+
+function clearAllMarkers(){
+  appData.markers = [];
 }
 
 function createMarker(map,site) {
