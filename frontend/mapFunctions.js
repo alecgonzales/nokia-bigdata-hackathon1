@@ -24,7 +24,6 @@ function initialize() {
   bindSearchEvents()
   updatePagination(10)
   addTableClickEvent()
-  addTableHoverEvent()
 }
 
 function synchronizeMapPointsWithTable() {
@@ -129,7 +128,6 @@ function updateTable(sites) {
       + "</tr>";
     $("#maps table").append(tableData);
     addTableClickEvent();
-    addTableHoverEvent()
   });
 }
 
@@ -184,11 +182,4 @@ siteSearch: {
       synchronizeMapPointsWithTable()
     })
   }
-
 }
-
-function addTableHoverEvent() {
-  $( ".table tbody tr" ).hover(function() {
-    $(this).addClass('highlight').siblings().removeClass('highlight');
-  });
-};

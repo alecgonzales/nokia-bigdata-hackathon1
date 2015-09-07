@@ -62,5 +62,5 @@ html, body, #maps, .container-fluid {
     cursor: pointer;
 }
 
+.sidebar .table-hover tbody tr:hover { background-color: bisque; }
 .table-striped tbody tr.selected td { background-color: aquamarine; }
-.table-striped tbody tr.highlight td { background-color: bisque; }
