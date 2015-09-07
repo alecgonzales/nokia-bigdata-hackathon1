@@ -115,7 +115,7 @@ function updateTable(sites) {
 }
 
 function updatePagination(pages) {
-  var pagination = $("#maps ul");
+  var pagination = $("#maps .pagination");
   pagination.empty();
   for( i = 0; i < pages; i++) {
     pagination.append("<li><a>" + (i+1) + "</a></li>");
