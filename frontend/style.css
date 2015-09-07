@@ -40,7 +40,7 @@ html, body, #maps, .container-fluid {
   top: 0;
 }
 
-.sidebar > div {
+.sidebar #siteData {
   margin: 10px 0;
   height: 280px;
   overflow-y: auto;
