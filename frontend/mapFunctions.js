@@ -72,7 +72,11 @@ function createMarker(map,site) {
       infoWindow:createInfoWindow(site),
     }
   );
-  marker.addListener('click', function() { setSelected(marker) } );
+  marker.addListener('click', function()
+    {
+      setSelected(marker);
+      $( ".table tbody tr" ).siblings().removeClass('selected');
+    });
   return marker;
 }
 
@@ -100,16 +104,15 @@ function setSelected(selected) {
     }
     else {
       appData.lastSelected.setAnimation(null);
-      appData.lastSelected.setIcon("siteicon.png");
       appData.lastSelected.infoWindow.close();
-      $( ".table tbody tr" ).siblings().removeClass('selected');
+      appData.lastSelected.setIcon("siteicon.png");
     }
   }
-  appData.map.setCenter(selected.getPosition());
+  selected.setAnimation(google.maps.Animation.BOUNCE);
   selected.infoWindow.open(appData.map,selected);
   selected.setIcon("pikachu.png");
-  selected.setAnimation(google.maps.Animation.BOUNCE);
   appData.lastSelected = selected;
+  appData.map.setCenter(selected.getPosition());
 }
 
 function queryTableData(page,key,value) {
@@ -140,17 +143,14 @@ function updatePagination() {
   if (appData.markers.length > 0)
   {
     var pages = Math.ceil(appData.markers.length / 50);
-    if (pages > 0)
-    {
-      if (appData.currentPage !== 1) {
-        pagination.append("<li><a href='#'>&#60;&#60;</a></li>");
-        pagination.append("<li><a href='#'>&#60;</a></li>");
-      }
-      appendCurrentAndNearbyPages(pagination,pages);
-      if (appData.currentPage !== pages) {
-        pagination.append("<li><a href='#'>&#62;</a></li>");
-        pagination.append("<li><a href='#'>&#62;&#62;</a></li>");
-      }
+    if (appData.currentPage !== 1) {
+      pagination.append("<li><a href='#'>&#60;&#60;</a></li>");
+      pagination.append("<li><a href='#'>&#60;</a></li>");
+    }
+    appendCurrentAndNearbyPages(pagination,pages);
+    if (appData.currentPage !== pages) {
+      pagination.append("<li><a href='#'>&#62;</a></li>");
+      pagination.append("<li><a href='#'>&#62;&#62;</a></li>");
     }
     $( ".pagination li" ).on( "click", function() {
       var text = $(this).text();
