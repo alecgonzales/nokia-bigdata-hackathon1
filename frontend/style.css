@@ -36,8 +36,23 @@ html, body, #maps, .container-fluid {
   content: "SEARCH";
 }
 
-.sidebar:hover {
+.sidebar:hover, .sidebar.pinned {
   top: 0;
+}
+
+.toolbar {
+  position: relative;
+  display: table;
+}
+
+.toolbar > div {
+  display: table-cell;
+  padding-right: 8px;
+  vertical-align: top;
+}
+
+.toolbar .btn-group {
+  vertical-align: inherit;
 }
 
 .sidebar #siteData {

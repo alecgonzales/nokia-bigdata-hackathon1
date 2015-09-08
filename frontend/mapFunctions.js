@@ -22,7 +22,7 @@ var appData = {
 function initialize() {
   initMap()
   synchronizeMapPointsWithTable()
-  bindSearchEvents()
+  bindSidebarEvents()
 }
 
 function synchronizeMapPointsWithTable() {
@@ -212,10 +212,11 @@ function addTableClickEvent(element) {
   });
 };
 
-siteSearch: {
-  function bindSearchEvents() {
+sidebarFunctions: {
+  function bindSidebarEvents() {
     bindInputSearchEvent()
     bindDropdownEvent()
+    bindSidebarLockEvent()
   }
 
   function bindInputSearchEvent() {
@@ -244,5 +245,11 @@ siteSearch: {
       appData.currentPage = 1;
       synchronizeMapPointsWithTable()
     })
+  }
+
+  function bindSidebarLockEvent() {
+    $('#pin-sidebar').click(function() {
+      $('.sidebar').toggleClass('pinned');
+    });
   }
 }
