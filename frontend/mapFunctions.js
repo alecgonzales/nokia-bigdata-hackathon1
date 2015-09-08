@@ -102,6 +102,7 @@ function setSelected(selected) {
       appData.lastSelected.setAnimation(null);
       appData.lastSelected.setIcon("siteicon.png");
       appData.lastSelected.infoWindow.close();
+      $( ".table tbody tr" ).siblings().removeClass('selected');
     }
   }
   appData.map.setCenter(selected.getPosition());
@@ -120,7 +121,7 @@ function queryTableData(page,key,value) {
 
 function updateTable(sites) {
   $("#maps table tbody").empty();
-  var index = 0;
+  var index = (appData.currentPage - 1) * 50;
   _.forEach(sites, function(site) {
     var tableData = "<tr data-index='" + index++ + "'>"
       + "<td>" + site.site_id + "</td>"
